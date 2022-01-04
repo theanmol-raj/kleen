@@ -8,7 +8,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 function CourseContent() {
     function CourseContentCard({item}){
-        return(<div className=' w-10/12 my-8  rounded-lg  bg-white border-l-4 border-blue-500'>
+        return(<div className=' xl:w-10/12 my-8  rounded-lg  bg-white border-l-4 border-blue-500'>
             <div className=' pl-6 py-8'>
 <div className=' flex flex-row justify-between'>
         <div>
@@ -31,16 +31,16 @@ function CourseContent() {
     return (
         <div className='  w-full p-8'>
             <p className=' text-xl text-gray-500'> Content</p>
-            <div className=' flex flex-row justify-between'>
-                <p className=' text-5xl font-semibold'>Course Online</p>
-                <div className=' flex flex-row space-x-8 '>
-                    <button className=' text-xl font-bold hover:bg-green-400 bg-green-600 px-8 rounded text-white hover:shadow-2xl transform hover:scale-105 duration-300 ease-out'><AddIcon fontSize='inherit' /> New Section</button>
-                    <button className=' text-xl font-bold hover:bg-blue-400 bg-blue-600 px-8 rounded text-white hover:shadow-2xl transform hover:scale-105 duration-300 ease-out'><FileUploadIcon fontSize='inherit' /> Collapse all Section</button>
-                    <button className=' text-xl font-bold bg-blue-600 px-8 rounded text-white hover:shadow-2xl transform hover:scale-105 hover:bg-blue-400 duration-300 ease-out'>View Live</button>
+            <div className=' flex flex-col lg:flex-row justify-between'>
+                <p className=' text-5xl pb-8 lg:pb-0 font-semibold'>Course Outline</p>
+                <div className=' flex flex-col lg:flex-row lg:space-x-8 '>
+                    <button className=' my-1 lg:my-0 text-xl font-bold hover:bg-green-400 bg-green-600 px-8 rounded text-white hover:shadow-2xl transform hover:scale-105 duration-300 ease-out'><AddIcon fontSize='inherit' /> New Section</button>
+                    <button className=' my-1 lg:my-0 text-xl font-bold hover:bg-blue-400 bg-blue-600 px-8 rounded text-white hover:shadow-2xl transform hover:scale-105 duration-300 ease-out'><FileUploadIcon fontSize='inherit' /> Collapse all Section</button>
+                    <button className=' my-1 lg:my-0 text-xl font-bold bg-blue-600 px-8 rounded text-white hover:shadow-2xl transform hover:scale-105 hover:bg-blue-400 duration-300 ease-out'>View Live</button>
 
                 </div>
             </div>
-            <div className=' flex flex-row  w-full'>
+            <div className=' flex flex-row  pt-8 w-full'>
                     <div className=' w-full h-screen  scrollbar-hide overflow-y-scroll '>
                         <CourseContentCard />
                         <CourseContentCard />
@@ -56,7 +56,7 @@ function CourseContent() {
 
 
                     </div>
-                    <div className=' w-40 lg:w-56 py-6 my-4 xl:w-96'>
+                    <div className=' hidden lg:block w-40 lg:w-56 py-6 my-4 xl:w-96'>
                         <p>What can i do over here</p>
                     </div>
             </div>
