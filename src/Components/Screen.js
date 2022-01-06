@@ -26,7 +26,7 @@ import VideoLectureScreens from '../Screens/SubScreens/VideoLecture'
 
 
 
-function Screen({side}) {
+function Screen({side,st}) {
     const[renderScreen,SetrenderScreen] = useState(0)
 
     const OptionArray =[{name:"Course" ,icon: <LibraryBooksIcon fontSize='inherit'  />},
@@ -35,7 +35,7 @@ function Screen({side}) {
     
     
     
-    const ScreenArray =[<CourseScreens /> ,<CertificateScreens/>,<ChallengeScreens />,<CourseContentScreens/>,<VideoLectureScreens/>,<BadgesScreens />,<ForumScreens/>,<StudentManagementScreens/>,<ProfileScreens />,<SettingsScreens />];
+    const ScreenArray =[<CourseScreens st={st} /> ,<CertificateScreens/>,<ChallengeScreens />,<CourseContentScreens/>,<VideoLectureScreens/>,<BadgesScreens />,<ForumScreens/>,<StudentManagementScreens/>,<ProfileScreens />,<SettingsScreens />];
 
 
 

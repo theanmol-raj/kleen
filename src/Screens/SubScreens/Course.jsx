@@ -1,10 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Data from '../Data/SampleCourse';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import axios from 'axios';
 
-function Course() {
+function Course({st}) {
+    const[CourseArray,SetArray] = useState(null)
+    useEffect (()=>{
+       axios.get('http://13.232.14.21:5000/instructor/courses').then(res => SetArray(res.data.courses))     
+    },[])
+
+
+
+
 
     function ImageUpload(){
         return(<div className="flex mt-8">
@@ -56,25 +66,26 @@ function Course() {
 
     const[courseADD,SetADD] = useState(true);
     const schema = {
-        _id: "61babf5e61bcf895e428b370",
+        // _id: "61babf5e61bcf895e428b370",
         name: "",
         heading: "",
         description: "",
         difficulity: 0,
         course_image: null,
-        ratings: 5,
-        __v: 0
+        // ratings: 5,
+        // __v: 0
     }
     const[courseData ,SetCourseData] = useState(schema);
 
 ///////////////////////////////////////////////////////////////////////////////////////////
     function HandleChange(e){
         const {name ,value,files} =e.target;
-        if(name !== 'course_image'){
         SetCourseData(prev =>({...prev , [name] : value}))
-    }else{
-        SetCourseData(prev =>({...prev , [name] : files[0]}))
-    }
+    //     if(name !== 'course_image'){
+    //     SetCourseData(prev =>({...prev , [name] : value}))
+    // }else{
+    //     SetCourseData(prev =>({...prev , [name] : files[0]}))
+    // }
 
     }
     const handleSliderChange = (event, newValue) => {
@@ -82,15 +93,16 @@ function Course() {
       };
     
 ///////////////////////////////////////////////////////////////////////////////////////////
-    const[CourseArray,SetArray] = useState(Data)
+    
 
     function CourseItem({item,index}){
+        
         return(<div className=' bg-white m-8 mg:m-0 border shadow-2xl rounded-b-xl rounded-t-2xl'>
             <div className="grid grid-row-2 sm:gap-x-8 md:pb-4">
             <div className="relative ">
             <p className='absolute bottom-4 left-4 text-md font-light bg-white px-4 rounded-3xl'> {item.heading} </p>
             <p className='absolute bottom-4 right-4 text-xl bg-purple-400 px-4 rounded-3xl'> {item.difficulity} </p>
-            <button onClick={()=>{DeleteCourse(index)}} className=' text-white bg-red-500 ml-4  px-3 py-2 text-2xl font-semibold  rounded-3xl absolute top-2 right-2'><DeleteSweepIcon fontSize='inherit' /></button>
+            <button onClick={()=>{DeleteCourse(item._id,index)}} className=' text-white bg-red-500 ml-4  px-3 py-2 text-2xl font-semibold  rounded-3xl absolute top-2 right-2'><DeleteSweepIcon fontSize='inherit' /></button>
         <img className=' rounded-t-2xl' src="https://images.unsplash.com/photo-1454372182658-c712e4c5a1db?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80" alt=""  /></div>
         <div></div></div>
         <div>
@@ -120,7 +132,7 @@ function Course() {
     function HandleUpdate(item){
         SetADD(false);
         SetCourseData({
-            _id: "61babf5e61bcf895e428b370",
+            _id: item._id,
             name: item.name,
             heading: item.heading,
             description: item.description,
@@ -132,15 +144,39 @@ function Course() {
         
     }
     
-    function DeleteCourse(y){
-        SetArray(prev => prev.filter((x,z) => z !== y ))
+    function DeleteCourse(id,y){
+        axios.delete('http://13.232.14.21:5000/instructor/course-delete/'+id).then(function(response){
+            console.log(response);
+            SetArray(prev => prev.filter((x,z) => z !== y ))
+        })
+        
+
 
 
     }
-    function HandleSubmit(e){
-        console.log(courseData)
+    async function HandleSubmitAdd(e){
         e.preventDefault();
-        SetCourseData(schema)
+         await axios.post('http://13.232.14.21:5000/instructor/add-course',courseData).then(function(resp){
+            axios.get('http://13.232.14.21:5000/instructor/courses').then(res => SetArray(res.data.courses))
+            SetCourseData(schema)
+
+        })
+
+    }
+    async function HandleSubmitUpdate(e){
+        e.preventDefault();
+         await axios.patch('http://13.232.14.21:5000/instructor/update-course/'+ courseData?._id,{
+            name: courseData.name,
+            heading: courseData.heading,
+            description: courseData.description,
+            difficulity: courseData.difficulity,
+            course_image: courseData.course_image,
+        }).then(function(resp){
+            axios.get('http://13.232.14.21:5000/instructor/courses').then(res => SetArray(res.data.courses))
+            SetCourseData(schema)
+
+        })
+        
 
     }
 
@@ -170,7 +206,7 @@ function Course() {
                     
                     <ImageUpload />
 
-                    <button onClick={HandleSubmit} className=' hover:shadow-2xl transform duration-300 ease-out hover:scale-95 mt-10 rounded-2xl bg-blue-500 py-4 text-2xl font-bold text-white'>{courseADD ? 'Add' : 'Update'} Course</button>
+                    <button onClick={courseADD ?HandleSubmitAdd : HandleSubmitUpdate} className=' hover:shadow-2xl transform duration-300 ease-out hover:scale-95 mt-10 rounded-2xl bg-blue-500 py-4 text-2xl font-bold text-white'>{courseADD ? 'Add' : 'Update'} Course</button>
                     
                 </form>
             </div>
@@ -180,7 +216,7 @@ function Course() {
            <div className=' absolute z-20 bg-gray-300 w-full'> <p className='py-4 text-center text-4xl'>Your Courses</p></div>
                 <div className=' overflow-y-scroll scrollbar-hide  pt-20 mb-24  w-full '>
                 <div className='grid grid-cols-1 lg:grid-cols-2  gap-2 2xl:mr-4 '>
-            {CourseArray.map((item,index) => <CourseItem key={item._id} index={index} item={item} />)}
+            {CourseArray?.map((item,index) => <CourseItem key={item._id} index={index} item={item} />)}
 
             </div>
                 </div>
