@@ -3,9 +3,37 @@ import AddIcon from '@mui/icons-material/Add';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 function VideoLecture() {
+    const schema = {
+        title : "",
+        sequence:"",
+        description:"",
+        course_Video: ""
+    }
+
+    const[VideoObj,SetVideoObj] = useState(schema);
+
+    function HandleChange(e){
+        console.log() 
+        const {name ,value,files} = e.target;
+        if(name !=='course_Video'){
+        SetVideoObj(prev =>({...prev , [name] :value}))}
+        else{
+            SetVideoObj(prev =>({...prev , [name] :value}))
+        }
+    }
+
+    function HandleSubmit(e){
+        e.preventDefault()
+        console.log(VideoObj);
+    }
+
+
+
+
     const [open, setOpen] = useState(false);
     const handleClose = (e) => {
         setOpen(false);
@@ -18,7 +46,7 @@ function VideoLecture() {
 
     function VideoStack(){
         return(<div className=' my-2 h-40 w-full flex flex-row   rounded-lg  bg-white border-l-4 border-blue-500'>
-            <iframe className='' src="https://www.youtube.com/embed/tgbNymZ7vqY" />
+            <iframe className='' src="https://www.youtube-nocookie.com/embed/tgbNymZ7vqY" />
 
         
     </div>)
@@ -30,8 +58,8 @@ function VideoLecture() {
             <div className=' px-6 py-8'>
 <div className=' flex flex-row justify-between'>
         <div className=' w-full'>
-        <iframe className=' xl:w-full xl:h-96' src="https://www.youtube.com/embed/tgbNymZ7vqY" />
-
+        <iframe className=' xl:w-full xl:h-96' src="https://www.youtube-nocookie.com/embed/tgbNymZ7vqY" />
+        {/* https://www.youtube-nocookie.com/embed/i8eBBG46H8A */}
 
         </div>
 </div>
@@ -55,19 +83,23 @@ function VideoLecture() {
         open={open}
         // 
       >
-        <div className=' bg-white w-10/12 py-16 rounded-3xl'>
-            <form className=' lg:mx-16'>
-            <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Course Id</label>
-                    <input  name='name' className=' border border-gray-50 shadow-lg bg-gray-50 rounded-xl py-2 pl-4' />
-                    <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Video Serial Number</label>
-                    <input name='heading' className=' border border-gray-50 shadow-lg bg-gray-50 rounded-xl py-2 pl-4' />
-                    
-                    
+        <div className=' relative bg-white w-10/12 py-8 rounded-3xl'>
+            <button onClick={handleClose} className=' absolute text-4xl right-10 top-5 text-gray-400'><CloseIcon fontSize='inherite' /></button>
+            <div className=' w-full mx-auto'>
+            <div className=' mt-4  mb-8 bg-white px-8 pb-12 pt-10  mx-auto lg:w-5/6 
+            xl:w-3/4    rounded-2xl'>
+            <p className=' text-center text-gray-700 text-4xl'>Upload Video </p>
+                <form className=' flex pt-8 flex-col'>
+                <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Title</label>
+                    <input onChange={HandleChange} value={VideoObj.title} name='title' className=' border text-gray-500 font-bold border-gray-50 shadow-lg bg-gray-50 rounded-xl py-2 pl-4' />
+                    <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Sequence Number</label>
+                    <input onChange={HandleChange} value={VideoObj.sequence} name='sequence' className='text-gray-500 font-bold border border-gray-50 shadow-lg bg-gray-50 rounded-xl py-2 pl-4' />
+                    <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Description</label>
+                    <textarea onChange={HandleChange} value={VideoObj.description} name='description'  rows={3} className=' border text-gray-500 font-bold border-gray-50 pl-4 shadow-xl bg-gray-50 rounded-xl' />
                     <div className="flex mt-8">
         <div className="rounded-lg shadow-xl bg-gray-50 w-full ">
             <div className="m-4">
-                <label className="inline-block mb-2 text-gray-500">Upload
-                    Video</label>
+                <label className="inline-block mb-2 text-gray-500">{VideoObj.course_Video? `${VideoObj.course_Video}` : "Upload Image(jpg,png,jpeg)"}</label>
                 <div className="flex items-center justify-center w-full">
                     <label className="flex flex-col w-full h-20 border-4 border-dashed hover:bg-gray-100 hover:border-gray-300">
                         <div className="flex flex-col items-center justify-center pt-2">
@@ -81,14 +113,18 @@ function VideoLecture() {
                             <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
                                 Select a photo</p>
                         </div>
-                        <input name='course_image' type="file" className="opacity-0" />
+                        <input onChange={HandleChange} value={VideoObj.course_Video}  name='course_Video' type="file" className=" text-gray-500 font-bold opacity-0" />
                     </label>
                 </div>
             </div>
         </div>
     </div>
-    <button onClick={handleClose} className=' hover:shadow-2xl transform duration-300 ease-out hover:scale-95 mt-10 rounded-2xl px-8 mx-auto bg-blue-500 py-4 text-md font-bold text-white'>Upload Video</button>
-            </form>
+
+                    <button onClick={HandleSubmit} className=' hover:shadow-2xl transform duration-300 ease-out hover:scale-95 mt-10 rounded-2xl bg-blue-500 py-4 text-2xl font-bold text-white'>Upload Video</button>
+                    
+                </form>
+            </div>
+           </div>
         </div>
       </Backdrop>
             {/* <p className=' text-xl text-gray-500'> Content</p> */}

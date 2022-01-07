@@ -11,6 +11,7 @@ useEffect(()=>{
 },[])
 
     function ChallengeCard({item,index}){
+      // console.log(item)
         return(
             <Disclosure>
           {({ open }) => (
@@ -61,17 +62,18 @@ useEffect(()=>{
     const [challenge,SetChallenge] = useState(schema)
     const [uploadC ,SetuploadC] = useState(true)
 
-    const[ChallengesArray ,SetChallengesArray] = useState([])
-
     function HandleChange(e){
         const {name ,value} =e.target;
         SetChallenge(prev =>({...prev , [name] : value}))
     }
     async function HandleUpload(e){
       e.preventDefault()  
+      // console.log(challenge)
       await axios.post('http://13.232.14.21:5000/instructor/upload-challenge',challenge).then(function(){
+        SetChallenge(schema)
         axios.get('http://13.232.14.21:5000/instructor/challenges').then(res => SetArr(res.data.challenges))
-      })
+        
+      }).catch(err=>console.log(err))
 
 
       
@@ -79,7 +81,12 @@ useEffect(()=>{
     }
 
     function HandleUpdate(e){
-      console.log(challenge);
+      // console.log(challenge);
+      axios.patch("http://13.232.14.21:5000/instructor/update-challenge/"+challenge._id ,challenge).then(function(){
+        SetChallenge(schema)
+        axios.get('http://13.232.14.21:5000/instructor/challenges').then(res => SetArr(res.data.challenges))
+        
+      })
       e.preventDefault()
     }
 
@@ -89,7 +96,7 @@ useEffect(()=>{
 
 
     return (
-        <div className={` w-full ${ChallengesArray.length <= 2? 'h-screen' : "h -full"}  `}>
+        <div className={` w-full pb-24 h-full"}  `}>
            <div className=''>
           
             <div className='  mx-auto mt-4  mb-8 bg-white px-8 pb-12 pt-10  lg:w-5/6 
@@ -98,7 +105,7 @@ useEffect(()=>{
             {!uploadC && <button onClick={()=>{SetuploadC(true);SetChallenge(schema)}} className=' hover:bg-gray-100 text-2xl font-bold px-4 py-2  shadow-xl border'> Upload new Challenge</button>}
                 <form className=' flex pt-8 flex-col'>
                 <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Title</label>
-                    <input onChange={HandleChange} value={challenge.name}  name='name' className=' border border-gray-50 shadow-lg bg-gray-50 rounded-xl py-2 pl-4' />
+                    <input onChange={HandleChange} value={challenge.title}  name='title' className=' border border-gray-50 shadow-lg bg-gray-50 rounded-xl py-2 pl-4' />
                     
                     <label className="inline-block mb-1 pt-4 pl-4 text-gray-500">Description</label>
                     <textarea onChange={HandleChange} value={challenge.description} name='description'  rows={3} className=' border border-gray-50 pl-4 shadow-xl bg-gray-50 rounded-xl' />
